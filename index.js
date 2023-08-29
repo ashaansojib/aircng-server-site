@@ -9,8 +9,8 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 app.use(cors())
 app.use(express.json())
 // ZjMlKPajdMvFp31l ashaduzzamansojib67
-app.get('/', (req,res) =>{
-    res.send('The server is running')
+app.get('/', (req, res) => {
+  res.send('The server is running')
 });
 
 
@@ -31,13 +31,15 @@ async function run() {
     // await client.connect();
     const resortCollection = client.db('resortCollection').collection('all-resorts');
     // get all resord data
-    app.get('/resorts', async(req, res) =>{
-        const allResorts = await resortCollection.find().toArray();
-        res.send(allResorts)
+    app.get('/resorts', async (req, res) => {
+      const allResorts = await resortCollection.find().toArray();
+      res.send(allResorts)
     });
-    app.get('/resorts-in/:location', async(req, res)=>{
-        const query = req.params.id;
-        console.log(query)
+    app.get('/resorts-in/:category', async (req, res) => {
+      const category = req.params.category;
+      const query = { category: { $regex: new RegExp(category, "i")} }
+      const result = await resortCollection.find(query).toArray();
+      res.send(result)
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -50,6 +52,6 @@ async function run() {
 run().catch(console.dir);
 
 
-app.listen(port, ()=>{
-    console.log('the port is running on:', port)
+app.listen(port, () => {
+  console.log('the port is running on:', port)
 })
