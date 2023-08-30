@@ -37,10 +37,22 @@ async function run() {
     });
     app.get('/resorts-in/:category', async (req, res) => {
       const category = req.params.category;
-      const query = { category: { $regex: new RegExp(category, "i")} }
+      const query = { category: { $regex: new RegExp(category, "i") } }
       const result = await resortCollection.find(query).toArray();
       res.send(result)
     })
+    // seaarch by name
+    app.get('/resorts-collection', async (req, res) => {
+      const searchQuery = req.query.q;
+      const regexPattern = new RegExp(searchQuery, 'i');
+      const searchResult = await resortCollection.find({
+        $or: [
+          { name: { $regex: regexPattern } },
+          { category: { $regex: regexPattern } }
+        ]
+      }).toArray();
+      res.send(searchResult);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
