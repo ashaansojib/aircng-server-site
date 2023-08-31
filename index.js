@@ -6,15 +6,15 @@ const port = process.env.PORT || 9988;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // middleware
-app.use(cors())
-app.use(express.json())
-// ZjMlKPajdMvFp31l ashaduzzamansojib67
+app.use(cors());
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('The server is running')
 });
 
 
-const uri = "mongodb+srv://ashaduzzamansojib67:ZjMlKPajdMvFp31l@cluster0.ugrpd0k.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.AIR_Username}:${process.env.AIR_Password}@cluster0.ugrpd0k.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -56,7 +56,6 @@ async function run() {
     // sort by price
     app.get('/price-range', async(req, res)=>{
       const minPrice = parseFloat(req.query.price);
-      console.log(minPrice)
       let query = {
         price: {$lte: minPrice}
       }
