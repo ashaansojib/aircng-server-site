@@ -53,6 +53,23 @@ async function run() {
       }).toArray();
       res.send(searchResult);
     });
+    // sort by price
+    app.get('/price-range', async(req, res)=>{
+      const minPrice = parseFloat(req.query.price);
+      console.log(minPrice)
+      let query = {
+        price: {$lte: minPrice}
+      }
+      const result = await resortCollection.find(query).toArray();
+      res.send(result)
+    })
+    // add room api
+    app.post('/add-room', async(req, res)=>{
+      const roomInfo = req.body;
+      const result = await resortCollection.insertOne(roomInfo);
+      res.send(result)
+    });
+    // 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
